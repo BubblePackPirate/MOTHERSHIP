@@ -4,7 +4,8 @@ See Docker Hub
 https://hub.docker.com/r/bubblepackpirate/mothership/
 
 # Want to run & pull it?
-> docker run -itd -p 8065:8065 -p 3000:3000 --name mothership bubblepackpirate/mothership:base
+> docker run -it -p 3000:3000 -p 8065:8065 -v mothership_db:/var/lib/mysql --name mothership  mothership:base
+
 
 * Default creds: `admin`/`password`
 
@@ -21,7 +22,7 @@ Tags | defined
 # TODO
 * Bundle HTTPS support
 * Provide Redmine Project templates (best practices)
-* Update volume (data storage) implementation
+
 
 # Dockerfile source
 https://github.com/BubblePackPirate/MOTHERSHIP
