@@ -48,9 +48,13 @@ RUN unzip master.zip && mv additionals-master /mothership/redmine/plugins/additi
 ADD https://github.com/sciyoshi/redmine-slack/archive/master.zip .
 RUN unzip master.zip && mv redmine-slack-master /mothership/redmine/plugins/redmine_slack
 
-#Theme only...Brings Remine in line with GitLab theme 
+#Theme only...Brings Remine in line with GitLab theme. Has bugs
 ADD https://github.com/hardpixel/minelab/archive/master.zip .
 RUN unzip master.zip && mv minelab-master /mothership/redmine/public/themes/minelab && rm master.zip
+
+#Another (newer) theme
+ADD https://github.com/mrliptontea/PurpleMine2/archive/master.zip . 
+RUN unzip master.zip && mv PurpleMine2-master /mothership/redmine/public/themes/PurpleMine2 && rm master.zip
 
 ADD redmine_start.sh redmine/
 RUN export DEBIAN_FRONTEND=noninteractive && bundle install
