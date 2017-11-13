@@ -13,6 +13,7 @@ Tags | defined
 --- | ---
 `:base` |  includes basic setup (theme, webhooks)
 `:unconfigured` | "factory reset" or "first run" apps
+`:latest` | "factory reset" or "first run" apps
 
 # Includes Redmine Plugins:
 * Redmine-slack (for posting into Mattermost webhooks)
@@ -22,10 +23,6 @@ Tags | defined
 # TODO
 * Bundle HTTPS support
 * Provide Redmine Project templates (best practices)
-
-
-# Dockerfile source
-https://github.com/BubblePackPirate/MOTHERSHIP
 
 
 
