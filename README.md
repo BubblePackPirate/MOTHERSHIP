@@ -1,6 +1,6 @@
 # MOTHERSHIP ->
 
-# Want to run & pull it?
+# One line setup
 > docker run -it -p 3000:3000 -p 8065:8065 -v mothership_db:/var/lib/mysql --name mothership  mothership:base
 
 
@@ -18,7 +18,6 @@ Tags | defined
 * Purplemine2 (Another theme)
 
 # TODO
-* Bundle HTTPS support
 * Provide Redmine Project templates (best practices)
 
 On Docker Hub
