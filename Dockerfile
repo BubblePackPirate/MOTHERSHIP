@@ -3,7 +3,7 @@ FROM redmine
 WORKDIR /mothership
 
 #Install random stuff
-RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y ca-certificates locate tcpdump nano lsb-release unzip
+RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y ca-certificates gnupg locate iproute tcpdump nano lsb-release unzip
 
 #Install mySQL 5.7, Set noninteractive cause it will prompt docker for shyt, and thus hang.
 ADD https://dev.mysql.com/get/mysql-apt-config_0.8.6-1_all.deb .
@@ -21,17 +21,17 @@ RUN service mysql start && chmod +x mysql_setup && ./mysql_setup && rm mysql-apt
 #
 #SSL Certs
 #
-
-##TODO.......
-
+RUN openssl genrsa -passout pass:x -out server.pass.key 2048 && openssl rsa -passin pass:x -in server.pass.key -out server.key && rm server.pass.key
+RUN openssl req -new -key server.key -out server.csr -subj "/C=US/ST=Mothersip/L=Cyberspace/O=Mothership/OU=Mothership/CN=mothership"
+RUN openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.pem && rm server.csr
 
 
 #
-# Configure Mattermost -- Change all instances of "4.3.1" to new version to update
+# Configure Mattermost -- Change all instances of "5.x.x" to new version to update
 #
-ADD https://releases.mattermost.com/4.3.1/mattermost-team-4.3.1-linux-amd64.tar.gz .
-RUN tar -zxvf ./mattermost-team-4.3.1-linux-amd64.tar.gz && rm ./mattermost-team-4.3.1-linux-amd64.tar.gz
-ADD config_docker.json ./mattermost/config/config_docker.json
+ADD https://releases.mattermost.com/5.7.1/mattermost-team-5.7.1-linux-amd64.tar.gz .
+RUN tar -zxvf ./mattermost-team-5.7.1-linux-amd64.tar.gz && rm ./mattermost-team-5.7.1-linux-amd64.tar.gz
+ADD config.json ./mattermost/config/config.json
 #RUN mkdir ./mattermost-data
 
 #
@@ -48,16 +48,12 @@ RUN unzip master.zip && mv additionals-master /mothership/redmine/plugins/additi
 ADD https://github.com/sciyoshi/redmine-slack/archive/master.zip .
 RUN unzip master.zip && mv redmine-slack-master /mothership/redmine/plugins/redmine_slack
 
-#Theme only...Brings Remine in line with GitLab theme. Has bugs
-ADD https://github.com/hardpixel/minelab/archive/master.zip .
-RUN unzip master.zip && mv minelab-master /mothership/redmine/public/themes/minelab && rm master.zip
-
 #Another (newer) theme
 ADD https://github.com/mrliptontea/PurpleMine2/archive/master.zip . 
 RUN unzip master.zip && mv PurpleMine2-master /mothership/redmine/public/themes/PurpleMine2 && rm master.zip
 
 ADD redmine_start.sh redmine/
-RUN export DEBIAN_FRONTEND=noninteractive && bundle install
+RUN cd redmine && export DEBIAN_FRONTEND=noninteractive && bundle install
 
 #Finalize
 ADD docker-entry.sh .
